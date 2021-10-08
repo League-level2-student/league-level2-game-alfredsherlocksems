@@ -21,5 +21,6 @@ public class ChessRunner {
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		panel.addMouseListener(panel);
 	}
 }
