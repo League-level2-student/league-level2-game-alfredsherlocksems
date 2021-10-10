@@ -120,44 +120,68 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 		int row = arg0.getY() / SQUARESIZE;
 		int selectedSquare = grid [row][col];
 		System.out.println("piece = " + grid [row][col] + ".");
+		System.out.println("The row is: " + row + ". the column is " + col + ".");
 		//if a piece is already selected
 		if (pieceSelected) {
 			if (col == columnSelected && row == rowSelected) {
 				pieceSelected = false;
 			}
 			else {
-				if (selectedSquare == WHITEPAWN) {
-					
-				}
-				if (selectedSquare == WHITEROOK) {
-					
-				}
-				if (selectedSquare == WHITEKNIGHT) {
-					
-				}
-				if (selectedSquare == WHITEBISHOP) {
-					
-				}
-				if (selectedSquare == WHITEQUEEN) {
-					
-				}
-				if (selectedSquare == WHITEKING) {
-					
-				}
-				grid[row][col] = 0;
+				// add an if statement to check if the selected square is the same color of the piece your moving, and if it isn't, then move.
+					if (intPieceSelected == WHITEROOK || intPieceSelected == BLACKROOK) {
+						if (rowSelected == row) {
+							//need code to check if there's a piece blocking the column
+							if (col > columnSelected) {
+								for (int i = 8 - (col - columnSelected); i < col; i++) { 
+									
+								}
+							}
+						if (columnSelected == col) {
+							//need code to check if there's a piece blocking the row
+							if (!blackToMove && selectedSquare > 20 || blackToMove && selectedSquare > 10 && selectedSquare < 20) {
+								grid[rowSelected][columnSelected] = 0;	
+								grid[row][col] = intPieceSelected;
+								pieceSelected = false;
+							}
+						}
+						}
+					}
+					if (intPieceSelected == WHITEKNIGHT || intPieceSelected == BLACKKNIGHT) {
+						if (((rowSelected + 2) == row || (rowSelected - 2) == row && (columnSelected - 1) == col || (columnSelected + 1) == col) || ((rowSelected + 1) == row || (rowSelected - 1) == row && (columnSelected + 2) == col || (columnSelected - 2) == col)) {
+							if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20 || selectedSquare == 0) {
+								grid[rowSelected][columnSelected] = 0;	
+								grid[row][col] = intPieceSelected;
+								pieceSelected = false;
+							}
+						}
+					}
+					if (intPieceSelected == WHITEBISHOP || intPieceSelected == BLACKBISHOP) {
+						
+					}
+					if (intPieceSelected == WHITEQUEEN || intPieceSelected == BLACKQUEEN) {
+						
+					}
+					if (intPieceSelected == WHITEKING || intPieceSelected == BLACKKING) {
+						
+					}
+					if (intPieceSelected == WHITEPAWN || intPieceSelected == BLACKPAWN) {
+						
+					}
 			}
 		}
 		//when you first select a piece.
 		else {
-			if (blackToMove && grid[row][col] < 20 && grid[row][col] > 0) {
+			if (blackToMove && selectedSquare < 20 && selectedSquare > 0) {
 			pieceSelected = true;
 			columnSelected = col;
 			rowSelected = row;
+			intPieceSelected = selectedSquare;
 			}
-			else if (!blackToMove && grid[row][col] > 19) {
+			else if (!blackToMove && selectedSquare > 19) {
 				pieceSelected = true;
 				columnSelected = col;
 				rowSelected = row;
+				intPieceSelected = selectedSquare;
 			}
 		}
 	}
