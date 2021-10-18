@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	boolean pieceBlocking = false;
 
 	int[][] grid = { { WHITEROOK, WHITEKNIGHT, WHITEBISHOP, WHITEQUEEN, WHITEKING, WHITEBISHOP, WHITEKNIGHT, WHITEROOK },
-			{ WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
+			{ WHITEPAWN, 0, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN },
@@ -146,6 +146,58 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 			}
 		}
 	}
+	
+	void Bishop(int col, int row, int selectedSquare) {
+		if (row > rowSelected) {
+			for (int i = rowSelected + 1; i < row - rowSelected; i++) {
+				if (col > columnSelected) {
+					for (int j = columnSelected; j < col - columnSelected; j++) {
+						if (grid[i][j] > 0) {
+							pieceBlocking = true;
+						}
+						i++;
+					}
+				}
+				else {
+					for (int j = columnSelected + 1; j > columnSelected - col; j--) {
+						if (grid[i][j] > 0) {
+							pieceBlocking = true;
+						}
+						i++;
+					}
+				}
+			}
+		}
+		else {
+			for (int i = rowSelected + 1; i > rowSelected - row; i--) {
+				if (col > columnSelected) {
+					for (int j = columnSelected + 1; j < col - columnSelected; j++) {
+						if (grid[i][j] > 0) {
+						pieceBlocking = true;
+						}
+						i--;
+					}
+				}
+				else {
+					for (int j = columnSelected; j > columnSelected - col; j--) {
+						if (grid[i][j] > 0) {
+						pieceBlocking = true;
+						}
+						i--;
+					}
+				}
+			}
+		}
+		if (!pieceBlocking) {
+			if (blackToMove && selectedSquare > 20
+					|| !blackToMove && selectedSquare > 10 && selectedSquare < 20 || selectedSquare == 0) {
+				grid[rowSelected][columnSelected] = 0;
+				grid[row][col] = intPieceSelected;
+				pieceSelected = false;
+			}
+		}
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -185,7 +237,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					}
 				}
 				if (intPieceSelected == WHITEBISHOP || intPieceSelected == BLACKBISHOP) {
-
+					Bishop(col, row, selectedSquare);
 				}
 				if (intPieceSelected == WHITEQUEEN || intPieceSelected == BLACKQUEEN) {
 
