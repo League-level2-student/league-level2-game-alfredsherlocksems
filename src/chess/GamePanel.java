@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	boolean pieceBlocking = false;
 
 	int[][] grid = { { WHITEROOK, WHITEKNIGHT, WHITEBISHOP, WHITEQUEEN, WHITEKING, WHITEBISHOP, WHITEKNIGHT, WHITEROOK },
-			{ WHITEPAWN, 0, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
+			{ WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN },
@@ -47,6 +47,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	final int END = 2;
 	Timer drawFrame;
 	int currentState = GAME;
+	int rowChange = 0;
+	int colChange = 0;
 
 	public GamePanel() {
 		drawFrame = new Timer(1000 / 60, this);
@@ -148,55 +150,39 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	}
 	
 	void Bishop(int col, int row, int selectedSquare) {
-		if (row > rowSelected) {
-			for (int i = rowSelected + 1; i < row - rowSelected; i++) {
-				if (col > columnSelected) {
-					for (int j = columnSelected; j < col - columnSelected; j++) {
-						if (grid[i][j] > 0) {
-							pieceBlocking = true;
-						}
-						i++;
-					}
-				}
-				else {
-					for (int j = columnSelected + 1; j > columnSelected - col; j--) {
-						if (grid[i][j] > 0) {
-							pieceBlocking = true;
-						}
-						i++;
-					}
-				}
-			}
+		if (col > columnSelected) {
+			colChange = 1;
 		}
 		else {
-			for (int i = rowSelected + 1; i > rowSelected - row; i--) {
-				if (col > columnSelected) {
-					for (int j = columnSelected + 1; j < col - columnSelected; j++) {
-						if (grid[i][j] > 0) {
-						pieceBlocking = true;
-						}
-						i--;
-					}
+			colChange = -1;
+		}
+		if (row > rowSelected) {
+			rowChange = 1;
+		}
+		else {
+			rowChange = -1;
+		}
+		if (Math.abs(row - rowSelected) == Math.abs(col - columnSelected)) {
+			for (int i = 1; i < Math.abs(row - rowSelected); i++) {
+				int newRow = rowSelected + rowChange * i;
+				int newCol = columnSelected + colChange * i;
+				if (grid[newRow][newCol] == selectedSquare) {
+					break;
 				}
-				else {
-					for (int j = columnSelected; j > columnSelected - col; j--) {
-						if (grid[i][j] > 0) {
-						pieceBlocking = true;
-						}
-						i--;
-					}
+				if (grid[newRow][newCol] > 0) {
+					pieceBlocking = true;
+					break;
+				}
+			}
+			if (!pieceBlocking) {
+				if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20
+						|| selectedSquare == 0) {
+					grid[rowSelected][columnSelected] = 0;
+					grid[row][col] = intPieceSelected;
+					pieceSelected = false;
 				}
 			}
 		}
-		if (!pieceBlocking) {
-			if (blackToMove && selectedSquare > 20
-					|| !blackToMove && selectedSquare > 10 && selectedSquare < 20 || selectedSquare == 0) {
-				grid[rowSelected][columnSelected] = 0;
-				grid[row][col] = intPieceSelected;
-				pieceSelected = false;
-			}
-		}
-		
 	}
 
 	@Override
