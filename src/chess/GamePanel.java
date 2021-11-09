@@ -111,6 +111,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[rowSelected][columnSelected] = 0;
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
+				blackToMove = !blackToMove;
 			}
 		}
 		else if (((rowSelected + 1) == row || (rowSelected - 1) == row) && ((columnSelected + 2) == col|| (columnSelected - 2) == col)) {
@@ -119,6 +120,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[rowSelected][columnSelected] = 0;
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
+				blackToMove = !blackToMove;
 			}
 		}
 	}
@@ -168,6 +170,19 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[rowSelected][columnSelected] = 0;
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
+				blackToMove = !blackToMove;
+				for (int i = 0; i < 8; i++) {
+					if (grid[i][col] > 0 || grid[row][i] > 0) {
+						break;
+					}
+					else if ((grid[i][col] == 10 && !blackToMove) || (grid[i][col] == 20 && blackToMove)) {
+						inCheck = true;
+					}
+					else if ((grid[row][i] == 10 && !blackToMove) || (grid[row][i] == 20 && blackToMove)) {
+						inCheck = true;
+					}
+				}
+				System.out.println("inCheck = " + inCheck + ".");
 			}
 		}
 	}
@@ -204,6 +219,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					grid[rowSelected][columnSelected] = 0;
 					grid[row][col] = intPieceSelected;
 					pieceSelected = false;
+					blackToMove = !blackToMove;
 				}
 			}
 		}
@@ -215,6 +231,61 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		}
 		else {
 			Bishop(col, row, selectedSquare);
+		}
+	}
+	
+	void Pawn(int col, int row, int selectedSquare) {
+		
+		if (selectedSquare == 0) {
+			if (!blackToMove && (intPieceSelected == WHITEPAWN && row == rowSelected + 1 && col == columnSelected) || (rowSelected == 1 && row == 3 && col == columnSelected)) {
+				grid[rowSelected][columnSelected] = 0;
+				grid[row][col] = intPieceSelected;
+				pieceSelected = false;
+				blackToMove = !blackToMove;
+			}
+			else if (blackToMove && (intPieceSelected == BLACKPAWN && row == rowSelected - 1 && col == columnSelected) || (rowSelected == 6 && row == 4 && col == columnSelected)) {
+				grid[rowSelected][columnSelected] = 0;
+				grid[row][col] = intPieceSelected;
+				pieceSelected = false;
+				blackToMove = !blackToMove;
+			}
+	
+		}
+		else {
+			if (intPieceSelected == WHITEPAWN) {
+				if (row == rowSelected + 1 && (col == columnSelected + 1 || col == columnSelected - 1)) {
+					if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20) {
+						grid[rowSelected][columnSelected] = 0;
+						grid[row][col] = intPieceSelected;
+						pieceSelected = false;
+						blackToMove = !blackToMove;
+					}
+				}
+			}
+			else {
+				if (intPieceSelected == BLACKPAWN) {
+					if (row == rowSelected + 1 && (col == columnSelected + 1 || col == columnSelected - 1)) {
+						if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20) {
+							grid[rowSelected][columnSelected] = 0;
+							grid[row][col] = intPieceSelected;
+							pieceSelected = false;
+							blackToMove = !blackToMove;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	void King(int col, int row, int selectedSquare) {
+		if ((row == rowSelected + 1 || row  == rowSelected - 1 || row == rowSelected) && (col == columnSelected + 1 || col == columnSelected - 1 || col == columnSelected)) {
+			if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20
+					|| selectedSquare == 0) {
+				grid[rowSelected][columnSelected] = 0;
+				grid[row][col] = intPieceSelected;
+				pieceSelected = false;
+				blackToMove = !blackToMove;
+			}
 		}
 	}
 	
@@ -252,10 +323,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					Queen(col, row, selectedSquare);
 				}
 				if (intPieceSelected == WHITEKING || intPieceSelected == BLACKKING) {
-
+					King(col, row, selectedSquare);
 				}
 				if (intPieceSelected == WHITEPAWN || intPieceSelected == BLACKPAWN) {
-
+					Pawn(col, row, selectedSquare);
 				}
 				pieceBlocking = false;
 			}
