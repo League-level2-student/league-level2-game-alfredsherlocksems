@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	boolean pieceBlocking = false;
 
 	int[][] grid = { { WHITEROOK, WHITEKNIGHT, WHITEBISHOP, WHITEKING, WHITEQUEEN, WHITEBISHOP, WHITEKNIGHT, WHITEROOK },
-			{ 0, WHITEPAWN, WHITEPAWN, 0, 0, WHITEPAWN, WHITEPAWN, WHITEPAWN },
+			{ WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN, BLACKPAWN },
@@ -172,17 +172,16 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				pieceSelected = false;
 				blackToMove = !blackToMove;
 				for (int i = 0; i < 8; i++) {
-					if (grid[i][col] > 0 || grid[row][i] > 0) {
-						break;
-					}
-					else if ((grid[i][col] == 10 && !blackToMove) || (grid[i][col] == 20 && blackToMove)) {
+					if ((grid[i][col] == 10 && !blackToMove) || (grid[i][col] == 20 && blackToMove)) {
 						inCheck = true;
 					}
 					else if ((grid[row][i] == 10 && !blackToMove) || (grid[row][i] == 20 && blackToMove)) {
 						inCheck = true;
 					}
+					else if (grid[i][col] > 0 || grid[row][i] > 0) {
+						break;
+					}
 				}
-				System.out.println("inCheck = " + inCheck + ".");
 			}
 		}
 	}
@@ -220,6 +219,76 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					grid[row][col] = intPieceSelected;
 					pieceSelected = false;
 					blackToMove = !blackToMove;
+					colChange = 1;
+					rowChange = 1;
+					for (int i = 1; i < 7; i++) {
+						int newRow = row + rowChange * i;
+						int newCol = col + colChange * i;
+						if (newCol == 8 || newRow == -1 || newCol == -1) {
+							break;
+						}
+						else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+							inCheck = true;
+							break;
+						}
+						else if (grid[newRow][newCol] > 0) {
+							break;
+						}
+					}
+					colChange = -1;
+					rowChange = 1;
+					if (!inCheck) {
+						for (int i = 1; i < 7; i++) {
+							int newRow = row + rowChange * i;
+							int newCol = col + colChange * i;
+							if (newCol == -1 || newRow == -1) {
+								break;
+							}
+							else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+								inCheck = true;
+								break;
+							}
+							else if (grid[newRow][newCol] > 0) {
+								break;
+							}
+						}
+					}
+					colChange = 1;
+					rowChange = -1;
+					if (!inCheck) {
+						for (int i = 1; i < 7; i++) {
+							int newRow = row + rowChange * i;
+							int newCol = col + colChange * i;
+							if (newCol == 8 || newRow == 8 || newRow == -1 || newCol == -1) {
+								break;
+							}
+							else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+								inCheck = true;
+								break;
+							}
+							else if (grid[newRow][newCol] > 0) {
+								break;
+							}	
+						}
+					}
+					colChange = -1;
+					rowChange = -1;
+					if (!inCheck ) {
+						for (int i = 1; i < 7; i++) {
+							int newRow = row + rowChange * i;
+							int newCol = col + colChange * i;
+							if (newCol == -1 || newRow == 8 || newRow == -1) {
+								break;
+							}
+							else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+								inCheck = true;
+								break;
+							}
+							else if (grid[newRow][newCol] > 0) {
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -242,34 +311,53 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
+				if (row != 7 || row !=0) {
+					if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+					inCheck = true;
+					}
+				}
 			}
 			else if (blackToMove && (intPieceSelected == BLACKPAWN && row == rowSelected - 1 && col == columnSelected) || (rowSelected == 6 && row == 4 && col == columnSelected)) {
 				grid[rowSelected][columnSelected] = 0;
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
+				if (row != 7 || row !=0) {
+					if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+						inCheck = true;
+					}
+				}			
 			}
-	
 		}
 		else {
 			if (intPieceSelected == WHITEPAWN) {
-				if (row == rowSelected + 1 && (col == columnSelected + 1 || col == columnSelected - 1)) {
+				if (row == rowSelected + 1 && col == columnSelected + 1 || col == columnSelected - 1) {
 					if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20) {
 						grid[rowSelected][columnSelected] = 0;
 						grid[row][col] = intPieceSelected;
 						pieceSelected = false;
 						blackToMove = !blackToMove;
+						if (row != 7 || row !=0) {
+							if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+								inCheck = true;
+							}
+						}
 					}
 				}
 			}
 			else {
 				if (intPieceSelected == BLACKPAWN) {
-					if (row == rowSelected + 1 && (col == columnSelected + 1 || col == columnSelected - 1)) {
+					if (row == rowSelected - 1 && col == columnSelected + 1 || col == columnSelected - 1) {
 						if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20) {
 							grid[rowSelected][columnSelected] = 0;
 							grid[row][col] = intPieceSelected;
 							pieceSelected = false;
 							blackToMove = !blackToMove;
+							if (row != 7 || row !=0) {
+								if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+									inCheck = true;
+								}
+							}
 						}
 					}
 				}
@@ -303,6 +391,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		int selectedSquare = grid[row][col];
 		System.out.println("piece = " + grid[row][col] + ".");
 		System.out.println("The row is: " + row + ". the column is " + col + ".");
+		System.out.println("inCheck = " + inCheck + ".");
 		// if a piece is already selected
 		if (pieceSelected) {
 			if (col == columnSelected && row == rowSelected) {
