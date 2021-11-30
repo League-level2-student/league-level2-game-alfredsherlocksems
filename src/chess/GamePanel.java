@@ -112,6 +112,58 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
+				if (blackToMove) {
+					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 10) {
+						inCheck=true;
+					}
+					else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 10) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 10) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 10) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 10) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 10) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 10) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 10) {
+						inCheck=true;
+					}
+				}
+				else {
+					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 20) {
+						inCheck=true;
+					}
+					else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 20) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 20) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 20) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 20) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 20) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 20) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 20) {
+						inCheck=true;
+					}
+				}	
 			}
 		}
 		else if (((rowSelected + 1) == row || (rowSelected - 1) == row) && ((columnSelected + 2) == col|| (columnSelected - 2) == col)) {
@@ -121,6 +173,59 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
+				//"brilliant" plan -- check each possible square with if statements.
+				if (blackToMove) {
+					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 10) {
+						inCheck=true;
+					}
+					else if (row+2 < 8 && col-1 > -1 && grid[row+2][col-1] == 10) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 10) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 10) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 10) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 10) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 10) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 10) {
+						inCheck=true;
+					}
+				}
+				else {
+					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 20) {
+						inCheck=true;
+					}
+					else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 20) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 20) {
+						inCheck=true;
+					}
+					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 20) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 20) {
+						inCheck=true;
+					}
+					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 20) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 20) {
+						inCheck=true;
+					}
+					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 20) {
+						inCheck=true;
+					}
+				}	
 			}
 		}
 	}
@@ -227,7 +332,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 						if (newCol == 8 || newRow == -1 || newCol == -1) {
 							break;
 						}
-						else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+						else if ((blackToMove && grid[newRow][newCol] == 20) || !(blackToMove && grid[newRow][newCol] == 10)) {
 							inCheck = true;
 							break;
 						}
@@ -244,7 +349,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 							if (newCol == -1 || newRow == -1) {
 								break;
 							}
-							else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+							else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
 								inCheck = true;
 								break;
 							}
@@ -262,7 +367,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 							if (newCol == 8 || newRow == 8 || newRow == -1 || newCol == -1) {
 								break;
 							}
-							else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+							else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
 								inCheck = true;
 								break;
 							}
@@ -280,7 +385,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 							if (newCol == -1 || newRow == 8 || newRow == -1) {
 								break;
 							}
-							else if ((blackToMove && grid[newRow][newCol] == 20) || !blackToMove && grid[newRow][newCol] == 10) {
+							else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
 								inCheck = true;
 								break;
 							}
@@ -323,7 +428,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				pieceSelected = false;
 				blackToMove = !blackToMove;
 				if (row != 7 || row !=0) {
-					if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+					if ((col != 7 && grid[row - 1][col + 1] == 20) || (col != 0 && grid[row - 1][col - 1] == 20)) {
 						inCheck = true;
 					}
 				}			
@@ -354,7 +459,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 							pieceSelected = false;
 							blackToMove = !blackToMove;
 							if (row != 7 || row !=0) {
-								if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+								if ((col != 7 && grid[row - 1][col + 1] == 20) || (col != 0 && grid[row - 1][col - 1] == 20)) {
 									inCheck = true;
 								}
 							}
