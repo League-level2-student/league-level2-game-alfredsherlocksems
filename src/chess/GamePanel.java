@@ -35,7 +35,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	boolean blackToMove = false;
 	boolean inCheck = false;
 	boolean pieceBlocking = false;
-
+	boolean rookChecking = false;
+	boolean bishopChecking = false;
+	boolean knightChecking = false;
+	boolean queenChecking = false;
+	boolean pawnChecking = false;
+	int lastCol = 0;
+	int lastRow = 0;
+	
 	int[][] grid = { { WHITEROOK, WHITEKNIGHT, WHITEBISHOP, WHITEKING, WHITEQUEEN, WHITEBISHOP, WHITEKNIGHT, WHITEROOK },
 			{ WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -112,58 +119,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
-				if (blackToMove) {
-					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 10) {
-						inCheck=true;
-					}
-					else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 10) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 10) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 10) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 10) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 10) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 10) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 10) {
-						inCheck=true;
-					}
-				}
-				else {
-					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 20) {
-						inCheck=true;
-					}
-					else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 20) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 20) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 20) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 20) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 20) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 20) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 20) {
-						inCheck=true;
-					}
-				}	
+				knightChecking(col, row);
 			}
 		}
 		else if (((rowSelected + 1) == row || (rowSelected - 1) == row) && ((columnSelected + 2) == col|| (columnSelected - 2) == col)) {
@@ -174,58 +130,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				pieceSelected = false;
 				blackToMove = !blackToMove;
 				//"brilliant" plan -- check each possible square with if statements.
-				if (blackToMove) {
-					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 10) {
-						inCheck=true;
-					}
-					else if (row+2 < 8 && col-1 > -1 && grid[row+2][col-1] == 10) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 10) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 10) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 10) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 10) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 10) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 10) {
-						inCheck=true;
-					}
-				}
-				else {
-					if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 20) {
-						inCheck=true;
-					}
-					else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 20) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 20) {
-						inCheck=true;
-					}
-					else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 20) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 20) {
-						inCheck=true;
-					}
-					else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 20) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 20) {
-						inCheck=true;
-					}
-					else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 20) {
-						inCheck=true;
-					}
-				}	
+				knightChecking(col, row);
 			}
 		}
 	}
@@ -276,17 +181,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
-				for (int i = 0; i < 8; i++) {
-					if ((grid[i][col] == 10 && !blackToMove) || (grid[i][col] == 20 && blackToMove)) {
-						inCheck = true;
-					}
-					else if ((grid[row][i] == 10 && !blackToMove) || (grid[row][i] == 20 && blackToMove)) {
-						inCheck = true;
-					}
-					else if (grid[i][col] > 0 || grid[row][i] > 0) {
-						break;
-					}
-				}
+				rookChecking(col, row);
 			}
 		}
 	}
@@ -326,74 +221,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					blackToMove = !blackToMove;
 					colChange = 1;
 					rowChange = 1;
-					for (int i = 1; i < 7; i++) {
-						int newRow = row + rowChange * i;
-						int newCol = col + colChange * i;
-						if (newCol == 8 || newRow == -1 || newCol == -1) {
-							break;
-						}
-						else if ((blackToMove && grid[newRow][newCol] == 20) || !(blackToMove && grid[newRow][newCol] == 10)) {
-							inCheck = true;
-							break;
-						}
-						else if (grid[newRow][newCol] > 0) {
-							break;
-						}
-					}
-					colChange = -1;
-					rowChange = 1;
-					if (!inCheck) {
-						for (int i = 1; i < 7; i++) {
-							int newRow = row + rowChange * i;
-							int newCol = col + colChange * i;
-							if (newCol == -1 || newRow == -1) {
-								break;
-							}
-							else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
-								inCheck = true;
-								break;
-							}
-							else if (grid[newRow][newCol] > 0) {
-								break;
-							}
-						}
-					}
-					colChange = 1;
-					rowChange = -1;
-					if (!inCheck) {
-						for (int i = 1; i < 7; i++) {
-							int newRow = row + rowChange * i;
-							int newCol = col + colChange * i;
-							if (newCol == 8 || newRow == 8 || newRow == -1 || newCol == -1) {
-								break;
-							}
-							else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
-								inCheck = true;
-								break;
-							}
-							else if (grid[newRow][newCol] > 0) {
-								break;
-							}	
-						}
-					}
-					colChange = -1;
-					rowChange = -1;
-					if (!inCheck ) {
-						for (int i = 1; i < 7; i++) {
-							int newRow = row + rowChange * i;
-							int newCol = col + colChange * i;
-							if (newCol == -1 || newRow == 8 || newRow == -1) {
-								break;
-							}
-							else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
-								inCheck = true;
-								break;
-							}
-							else if (grid[newRow][newCol] > 0) {
-								break;
-							}
-						}
-					}
+					bishopChecking(col, row);
 				}
 			}
 		}
@@ -402,9 +230,21 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	void Queen(int col, int row, int selectedSquare) {
 		if ((rowSelected == row) || (columnSelected == col)) {
 			Rook(col, row, selectedSquare);
+			if (inCheck) {
+				rookChecking = false;
+				queenChecking = true;
+				lastCol=col;
+				lastRow=row;
+			}
 		}
 		else {
 			Bishop(col, row, selectedSquare);
+			if (inCheck) {
+				bishopChecking = false;
+				queenChecking = true;
+				lastCol = col;
+				lastRow = row;
+			}
 		}
 	}
 	
@@ -416,22 +256,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
-				if (row != 7 || row !=0) {
-					if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
-					inCheck = true;
-					}
-				}
+				pawnChecking(col, row);
 			}
 			else if (blackToMove && (intPieceSelected == BLACKPAWN && row == rowSelected - 1 && col == columnSelected) || (rowSelected == 6 && row == 4 && col == columnSelected)) {
 				grid[rowSelected][columnSelected] = 0;
 				grid[row][col] = intPieceSelected;
 				pieceSelected = false;
 				blackToMove = !blackToMove;
-				if (row != 7 || row !=0) {
-					if ((col != 7 && grid[row - 1][col + 1] == 20) || (col != 0 && grid[row - 1][col - 1] == 20)) {
-						inCheck = true;
-					}
-				}			
+				pawnChecking(col, row);		
 			}
 		}
 		else {
@@ -442,11 +274,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 						grid[row][col] = intPieceSelected;
 						pieceSelected = false;
 						blackToMove = !blackToMove;
-						if (row != 7 || row !=0) {
-							if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
-								inCheck = true;
-							}
-						}
+						pawnChecking(col, row);
 					}
 				}
 			}
@@ -458,11 +286,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 							grid[row][col] = intPieceSelected;
 							pieceSelected = false;
 							blackToMove = !blackToMove;
-							if (row != 7 || row !=0) {
-								if ((col != 7 && grid[row - 1][col + 1] == 20) || (col != 0 && grid[row - 1][col - 1] == 20)) {
-									inCheck = true;
-								}
-							}
+							pawnChecking(col, row);
 						}
 					}
 				}
@@ -474,13 +298,196 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		if ((row == rowSelected + 1 || row  == rowSelected - 1 || row == rowSelected) && (col == columnSelected + 1 || col == columnSelected - 1 || col == columnSelected)) {
 			if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20
 					|| selectedSquare == 0) {
-				grid[rowSelected][columnSelected] = 0;
-				grid[row][col] = intPieceSelected;
-				pieceSelected = false;
-				blackToMove = !blackToMove;
+				inCheck = false;
+				if (rookChecking) {
+					rookChecking(lastCol, lastRow);
+				}
+				else if (knightChecking) {
+					knightChecking(lastCol, lastRow);
+				}
+				else if (bishopChecking) {
+					bishopChecking(lastCol, lastRow);
+				}
+				else if (queenChecking) {
+					Queen(lastCol, lastRow, selectedSquare);
+				}
+				else if (pawnChecking) {
+					pawnChecking(lastCol, lastRow);
+				}
+				if (!inCheck) {
+					grid[rowSelected][columnSelected] = 0;
+					grid[row][col] = intPieceSelected;
+					pieceSelected = false;
+					blackToMove = !blackToMove;
+				}
 			}
 		}
 	}
+	
+	void rookChecking(int col, int row) {
+		for (int i = 0; i < 8; i++) {
+			if ((grid[i][col] == 10 && !blackToMove) || (grid[i][col] == 20 && blackToMove)) {
+				rookChecking = true;
+				inCheck = true;
+				lastCol = col;
+				lastRow = row;
+			}
+			else if ((grid[row][i] == 10 && !blackToMove) || (grid[row][i] == 20 && blackToMove)) {
+				rookChecking = true;
+				inCheck = true;
+				lastCol = col;
+				lastRow = row;
+			}
+			else if (grid[i][col] > 0 || grid[row][i] > 0) {
+				break;
+			}
+		}
+	}
+
+	void knightChecking(int col, int row) {
+		if (blackToMove) {
+			if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 10) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+		}
+		else {
+			if (row+2 < 8 && col+1< 8 && grid[row+2][col+1] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row+2 < 8 && col-1> -1 && grid[row+2][col-1] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-2 > -1 && col+1 < 8 &&  grid[row-2][col+1] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-2 > -1 && col-1> -1 &&  grid[row-2][col-1] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row+1 < 8 && col+2< 8 &&  grid[row+1][col+2] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row+1 < 8 && col-2> -1 &&  grid[row+1][col-2] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-1 > -1 && col+2< 8 &&  grid[row-1][col+2] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+			else if (row-1 > -1 && col-2> -1 &&  grid[row-1][col-2] == 20) {
+				inCheck=true; knightChecking = true; lastCol = col; lastRow = row;;
+			}
+		}	
+	}
+	
+	
+	void bishopChecking(int col, int row) {
+		for (int i = 1; i < 7; i++) {
+			int newRow = row + rowChange * i;
+			int newCol = col + colChange * i;
+			if (newCol == 8 || newRow == -1 || newCol == -1) {
+				break;
+			}
+			else if ((blackToMove && grid[newRow][newCol] == 20) || !(blackToMove && grid[newRow][newCol] == 10)) {
+				inCheck = true;
+				bishopChecking = true; lastCol = col; lastRow = row;
+				break;
+			}
+			else if (grid[newRow][newCol] > 0) {
+				break;
+			}
+		}
+		colChange = -1;
+		rowChange = 1;
+		if (!inCheck) {
+			for (int i = 1; i < 7; i++) {
+				int newRow = row + rowChange * i;
+				int newCol = col + colChange * i;
+				if (newCol == -1 || newRow == -1) {
+					break;
+				}
+				else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
+					inCheck = true;
+					bishopChecking = true; lastCol = col; lastRow = row;
+					break;
+				}
+				else if (grid[newRow][newCol] > 0) {
+					break;
+				}
+			}
+		}
+		colChange = 1;
+		rowChange = -1;
+		if (!inCheck) {
+			for (int i = 1; i < 7; i++) {
+				int newRow = row + rowChange * i;
+				int newCol = col + colChange * i;
+				if (newCol == 8 || newRow == 8 || newRow == -1 || newCol == -1) {
+					break;
+				}
+				else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
+					inCheck = true;
+					bishopChecking = true; lastCol = col; lastRow = row;
+					break;
+				}
+				else if (grid[newRow][newCol] > 0) {
+					break;
+				}	
+			}
+		}
+		colChange = -1;
+		rowChange = -1;
+		if (!inCheck ) {
+			for (int i = 1; i < 7; i++) {
+				int newRow = row + rowChange * i;
+				int newCol = col + colChange * i;
+				if (newCol == -1 || newRow == 8 || newRow == -1) {
+					break;
+				}
+				else if ((blackToMove && grid[newRow][newCol] == 20) || (!blackToMove && grid[newRow][newCol] == 10)) {
+					inCheck = true;
+					bishopChecking = true; lastCol = col; lastRow = row;
+					break;
+				}
+				else if (grid[newRow][newCol] > 0) {
+					break;
+				}
+			}
+		}
+	}
+	
+	
+	void pawnChecking(int col, int row) {
+		if (row != 7 || row !=0) {
+			if ((col != 7 && grid[row + 1][col + 1] == 10) || (col != 0 && grid[row + 1][col - 1] == 10)) {
+				inCheck = true;
+				pawnChecking = true;
+				lastCol = col;
+				lastRow = row;
+			}
+		}
+	}
+	
+
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -523,6 +530,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					Pawn(col, row, selectedSquare);
 				}
 				pieceBlocking = false;
+				if (inCheck) {
+					
+				}
 			}
 			// when you first select a piece.
 		} else {
