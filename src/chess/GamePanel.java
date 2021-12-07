@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -42,6 +44,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	boolean pawnChecking = false;
 	int lastCol = 0;
 	int lastRow = 0;
+	int colCheck = -1;
+	public static BufferedImage image;
+	public static boolean needImage = true;
+	public static boolean gotImage = false;	
 	
 	int[][] grid = { { WHITEROOK, WHITEKNIGHT, WHITEBISHOP, WHITEKING, WHITEQUEEN, WHITEBISHOP, WHITEKNIGHT, WHITEROOK },
 			{ WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
@@ -60,6 +66,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	public GamePanel() {
 		drawFrame = new Timer(1000 / 60, this);
 		drawFrame.start();
+		if (needImage) {
+		    loadImage ("rocket.png");
+		}
 	}
 
 	public void paintComponent(Graphics g) {
@@ -97,6 +106,15 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					g.setColor(Color.black);
 				}
 				g.fillRect(col * SQUARESIZE, rows * SQUARESIZE, SQUARESIZE, SQUARESIZE);
+				switch (grid[rows][col]) {
+				case 0: continue;
+				case 11: loadImage("BlackScuffPawn");
+				case 21: loadImage("WhiteScuffPawn");
+				case 10: loadImage("BlackScuffedKing");
+				case 20: loadImage("WhiteScuffKing");
+				//add the rest of the pieces.
+				}
+				g.drawImage(image, rows, col, SQUARESIZE, SQUARESIZE, null);
 				// System.out.println("Columns = " + col + " and rows = " + rows + "." + " The
 				// sum of the rows and columns is " + (col + rows) + ".");
 			}
@@ -110,7 +128,21 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	void DrawEnd(Graphics g) {
 
 	}
+	
+	void loadImage(String imageFile) {
+	    if (needImage) {
+	        try {
+	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+		    gotImage = true;
+	        } catch (Exception e) {
+	            
+	        }
+	        needImage = false;
+	    }
+	}
 
+	
+	
 	void Knight(int col, int row, int selectedSquare) {
 		if (((rowSelected + 2) == row || (rowSelected - 2) == row) && ((columnSelected - 1) == col || (columnSelected + 1) == col)) {
 			if (blackToMove && selectedSquare > 20
@@ -299,6 +331,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 			if (blackToMove && selectedSquare > 20 || !blackToMove && selectedSquare > 10 && selectedSquare < 20
 					|| selectedSquare == 0) {
 				inCheck = false;
+				grid[rowSelected][columnSelected] = 0;
+				grid[row][col] = intPieceSelected;
 				if (rookChecking) {
 					rookChecking(lastCol, lastRow);
 				}
@@ -314,11 +348,91 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				else if (pawnChecking) {
 					pawnChecking(lastCol, lastRow);
 				}
+				colCheck = 0;
+				for (int i = 0; i < 64; i++) {
+					if (blackToMove) {
+						if (grid[i][colCheck] == WHITEPAWN) {
+							pawnChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == WHITEKNIGHT) {
+							knightChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == WHITEBISHOP) {
+							bishopChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == WHITEQUEEN) {
+							bishopChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+							rookChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == WHITEROOK) {
+							rookChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+					}
+					else {
+						if (grid[i][colCheck] == BLACKPAWN) {
+							pawnChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == BLACKKNIGHT) {
+							knightChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == BLACKBISHOP) {
+							bishopChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == BLACKQUEEN) {
+							bishopChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+							rookChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+						if (grid[i][colCheck] == BLACKROOK) {
+							rookChecking(i, colCheck);
+							if (inCheck) {
+								break;
+							}
+						}
+					}
+					if ((i + 1) % 8 == 0) {
+					colCheck+=1;
+					}
+				}
 				if (!inCheck) {
-					grid[rowSelected][columnSelected] = 0;
-					grid[row][col] = intPieceSelected;
 					pieceSelected = false;
 					blackToMove = !blackToMove;
+				}
+				else {
+					grid[row][col] = 0;
+					grid[rowSelected][columnSelected] = intPieceSelected;
 				}
 			}
 		}
