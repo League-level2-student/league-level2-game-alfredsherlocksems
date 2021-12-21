@@ -48,6 +48,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;	
+	boolean pieceInTheWayCol = false;
+	boolean pieceInTheWayRow = false;
 	
 	int[][] grid = { { WHITEROOK, WHITEKNIGHT, WHITEBISHOP, WHITEKING, WHITEQUEEN, WHITEBISHOP, WHITEKNIGHT, WHITEROOK },
 			{ WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN, WHITEPAWN },
@@ -443,38 +445,80 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	}
 	
 	void rookChecking(int col, int row) {
-		for (int i = 0; i < 8; i++) {
-			if ((grid[i][col] == 10 && blackToMove) || (grid[i][col] == 20 && !blackToMove)) {
-				rookChecking = true;
+		for (int i = col + 1; i < 8; i++) {
+			if (grid[row][i] == 10 && blackToMove) {
 				inCheck = true;
-				lastCol = col;
+				rookChecking = true; 
+				lastCol = col; 
 				lastRow = row;
+				return;
 			}
-			else if ((grid[row][i] == 10 && blackToMove) || (grid[row][i] == 20 && !blackToMove)) {
-				rookChecking = true;
+			else if (grid[row][i] == 20 && !blackToMove) {
 				inCheck = true;
-				lastCol = col;
+				rookChecking = true; 
+				lastCol = col; 
 				lastRow = row;
+				return;
 			}
-			if (blackToMove && grid[i][col] != 20) {
-				if (grid[i][col] > 0) {
+			else if (grid[row][i] > 0){
 				break;
-				}
 			}
-			if (blackToMove && grid[row][i] != 20) {
-				if (grid[row][i] > 0) {
-					break;
-				}
+		}
+		for (int i = row + 1; i < 8; i++) {
+			if (grid[i][col] == 10 && blackToMove) {
+				inCheck = true;
+				rookChecking = true; 
+				lastCol = col; 
+				lastRow = row;
+				return;
 			}
-			if (!blackToMove && grid[i][col] != 10) {
-				if (grid[i][col] > 0) {
+			else if (grid[i][col] == 20 && !blackToMove) {
+				inCheck = true;
+				rookChecking = true; 
+				lastCol = col; 
+				lastRow = row;
+				return;
+			}
+			else if (grid[i][col] > 0){
 				break;
-				}
 			}
-			if (!blackToMove && grid[row][i] != 10) {
-				if (grid[row][i] > 0) {
-					break;
-				}
+		}
+		for (int i = col - 1; i > 0; i--) {
+			if (grid[row][i] == 10 && blackToMove) {
+				inCheck = true;
+				rookChecking = true; 
+				lastCol = col; 
+				lastRow = row;
+				return;
+			}
+			else if (grid[row][i] == 20 && !blackToMove) {
+				inCheck = true;
+				rookChecking = true; 
+				lastCol = col; 
+				lastRow = row;
+				return;
+			}
+			else if (grid[row][i] > 0){
+				break;
+			}
+		}
+		for (int i = row - 1; i > 0; i--) {
+			if (grid[i][col] == 10 && blackToMove) {
+				inCheck = true;
+				rookChecking = true; 
+				lastCol = col; 
+				lastRow = row;
+				return;
+			}
+			else if (grid[i][col] == 20 && !blackToMove) {
+				inCheck = true;
+				rookChecking = true; 
+				lastCol = col; 
+				lastRow = row;
+				return;
+			}
+			else if (grid[i][col] > 0){
+				break;
 			}
 		}
 	}
