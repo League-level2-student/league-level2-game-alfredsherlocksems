@@ -1,5 +1,6 @@
 package chess;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -34,7 +35,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	int intPieceSelected = 0;
 	int rowSelected = 0;
 	int columnSelected = 0;
-	boolean blackToMove = false;
+	public boolean blackToMove = false;
 	boolean inCheck = false;
 	boolean pieceBlocking = false;
 	boolean rookChecking = false;
@@ -51,7 +52,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	boolean pieceInTheWayCol = false;
 	boolean pieceInTheWayRow = false;
 	int timesLooped = 0;
-	boolean checkmate = false;
+	public boolean checkmate = false;
 	int kingRow = -1;
 	int kingCol = -1;
 	int pieceValue = 0;
@@ -635,10 +636,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	}
 
 	void bishopChecking(int col, int row) {
+		colChange = 1;
+		rowChange = 1;
 		for (int i = 1; i < 7; i++) {
 			int newRow = row + rowChange * i;
 			int newCol = col + colChange * i;
-			if (newCol == 8 || newRow == -1 || newCol == -1) {
+			if (newCol == 8 || newRow == -1 || newCol == -1 || newRow == 8) {
 				break;
 			} else if ((blackToMove && grid[newRow][newCol] == 10) || (!blackToMove && grid[newRow][newCol] == 20)) {
 				inCheck = true;
@@ -696,7 +699,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 			for (int i = 1; i < 7; i++) {
 				int newRow = row + rowChange * i;
 				int newCol = col + colChange * i;
-				if (newCol == -1 || newRow == 8 || newRow == -1) {
+				if (newCol == -1 || newRow == 8 || newRow == -1 || newCol == 8) {
 					break;
 				} else if ((!blackToMove && grid[newRow][newCol] == 20)
 						|| (blackToMove && grid[newRow][newCol] == 10)) {
@@ -816,263 +819,263 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		}
 	}
 
-	void Checkmate(int row, int col) {
-		colCheck = 0;
-		inCheck = false;
-		kingRow = -1;
-		kingCol = -1;
-		for (int i = 0; i < 8; i++) {
-			if (blackToMove) {
-				if (grid[i][colCheck] == BLACKKING) {
-					kingRow = i;
-					kingCol = colCheck;
-					break;
-				}
-			} else {
-				if (grid[i][colCheck] == WHITEKING) {
-					kingRow = i;
-					kingCol = colCheck;
-					break;
-				}
-			}
-			if ((i + 1) % 8 == 0) {
-				if (colCheck < 7) {
-					colCheck += 1;
-				}
-				i = 0;
-			}
-		}
-		grid[kingRow][kingCol] = 0;
-		if (blackToMove) {
-			inCheck = false;
-			if (kingRow < 7) {
-				if (grid[kingRow + 1][kingCol] > 20 || grid[kingRow + 1][kingCol] == 0) {
-					pieceValue = grid[kingRow + 1][kingCol];
-					grid[kingRow + 1][kingCol] = 10;
-					UltimateCheckingCode();
-					grid[kingRow + 1][kingCol] = pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow > 0) {
-				if (grid[kingRow - 1][kingCol] > 20 || grid[kingRow - 1][kingCol] == 0) {
-					pieceValue = grid[kingRow - 1][kingCol];
-					grid[kingRow - 1][kingCol] = 10;
-					UltimateCheckingCode();
-					grid[kingRow - 1][kingCol] = pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow < 7 && kingCol < 7) {
-				if (grid[kingRow + 1][kingCol + 1] > 20 || grid[kingRow + 1][kingCol + 1] == 0) {
-					pieceValue = grid[kingRow + 1][kingCol + 1];
-					grid[kingRow + 1][kingCol + 1] = 10;
-					UltimateCheckingCode();
-					grid[kingRow + 1][kingCol + 1] = pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow < 7 && kingCol > 0) {
-				if (grid[kingRow+1][kingCol - 1] > 20 || grid[kingRow+1][kingCol - 1] == 0) {
-					pieceValue = grid[kingRow+1][kingCol-1];
-					grid[kingRow+1][kingCol - 1]=10;
-					UltimateCheckingCode();
-					grid[kingRow+1][kingCol - 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingCol < 7) {
-				if (grid[kingRow][kingCol + 1] > 20 || grid[kingRow][kingCol+1] == 0) {
-					pieceValue = grid[kingRow][kingCol+1];
-					grid[kingRow][kingCol + 1]=10;
-					UltimateCheckingCode();
-					grid[kingRow][kingCol + 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingCol > 0) {
-				if (grid[kingRow][kingCol - 1] > 20 || grid[kingRow][kingCol-1] == 0) {
-					pieceValue = grid[kingRow][kingCol-1];
-					grid[kingRow][kingCol - 1]=10;
-					UltimateCheckingCode();
-					grid[kingRow][kingCol - 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow > 0 && kingCol < 7) {
-				if (grid[kingRow-1][kingCol + 1] > 20 || grid[kingRow-1][kingCol + 1] == 0) {
-					pieceValue = grid[kingRow-1][kingCol+1];
-					grid[kingRow-1][kingCol + 1]=10;
-					UltimateCheckingCode();
-					grid[kingRow-1][kingCol + 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow > 0 && kingCol > 0) {
-				if (grid[kingRow-1][kingCol - 1] > 20 || grid[kingRow-1][kingCol] == 0) {
-					pieceValue = grid[kingRow-1][kingCol-1];
-					grid[kingRow-1][kingCol - 1]=10;
-					UltimateCheckingCode();
-					grid[kingRow-1][kingCol - 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 10;
-						return;
-					}
-				}
-			}
-		} else {
-			inCheck = false;
-			if (kingRow < 7) {
-				if (grid[kingRow + 1][kingCol] < 20  || grid[kingRow + 1][kingCol] == 0) {
-					pieceValue = grid[kingRow + 1][kingCol];
-					grid[kingRow + 1][kingCol] = 20;
-					UltimateCheckingCode();
-					grid[kingRow + 1][kingCol] = pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow > 0) {
-				if (grid[kingRow - 1][kingCol] < 20  || grid[kingRow - 1][kingCol] == 0) {
-					pieceValue = grid[kingRow - 1][kingCol];
-					grid[kingRow - 1][kingCol] = 20;
-					UltimateCheckingCode();
-					grid[kingRow - 1][kingCol] = pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow < 7 && kingCol < 7) {
-				if (grid[kingRow + 1][kingCol + 1] < 20  || grid[kingRow + 1][kingCol + 1] == 0) {
-					pieceValue = grid[kingRow + 1][kingCol + 1];
-					grid[kingRow + 1][kingCol + 1] = 20;
-					UltimateCheckingCode();
-					grid[kingRow + 1][kingCol + 1] = pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow < 7 && kingCol > 0) {
-				if (grid[kingRow+1][kingCol - 1] < 20  || grid[kingRow+1][kingCol - 1] == 0) {
-					pieceValue = grid[kingRow+1][kingCol-1];
-					grid[kingRow+1][kingCol - 1]=20;
-					UltimateCheckingCode();
-					grid[kingRow+1][kingCol - 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingCol < 7) {
-				if (grid[kingRow][kingCol + 1] < 20  || grid[kingRow][kingCol+1] == 0) {
-					pieceValue = grid[kingRow][kingCol+1];
-					grid[kingRow][kingCol + 1]=20;
-					UltimateCheckingCode();
-					grid[kingRow][kingCol + 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingCol > 0) {
-				if (grid[kingRow][kingCol - 1] < 20  || grid[kingRow][kingCol-1] == 0) {
-					pieceValue = grid[kingRow][kingCol-1];
-					grid[kingRow][kingCol - 1]=20;
-					UltimateCheckingCode();
-					grid[kingRow][kingCol - 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow > 0 && kingCol < 7) {
-				if (grid[kingRow-1][kingCol + 1] < 20  || grid[kingRow-1][kingCol + 1] == 0) {
-					pieceValue = grid[kingRow-1][kingCol+1];
-					grid[kingRow-1][kingCol + 1]=20;
-					UltimateCheckingCode();
-					grid[kingRow-1][kingCol + 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-			inCheck = false;
-			if (kingRow > 0 && kingCol > 0) {
-				if (grid[kingRow-1][kingCol - 1] < 20  || grid[kingRow-1][kingCol] == 0) {
-					pieceValue = grid[kingRow-1][kingCol-1];
-					grid[kingRow-1][kingCol - 1]=20;
-					UltimateCheckingCode();
-					grid[kingRow-1][kingCol - 1]=pieceValue;
-					if (!inCheck) {
-						inCheck = true;
-						grid[kingRow][kingCol] = 20;
-						return;
-					}
-				}
-			}
-		}
-		checkmate = true;
-		System.out.println("Checkmate is " + checkmate + "!");
-	}
+//	void Checkmate(int row, int col) {
+//		colCheck = 0;
+//		inCheck = false;
+//		kingRow = -1;
+//		kingCol = -1;
+//		for (int i = 0; i < 8; i++) {
+//			if (blackToMove) {
+//				if (grid[i][colCheck] == BLACKKING) {
+//					kingRow = i;
+//					kingCol = colCheck;
+//					break;
+//				}
+//			} else {
+//				if (grid[i][colCheck] == WHITEKING) {
+//					kingRow = i;
+//					kingCol = colCheck;
+//					break;
+//				}
+//			}
+//			if ((i + 1) % 8 == 0) {
+//				if (colCheck < 7) {
+//					colCheck += 1;
+//				}
+//				
+//			}
+//		}
+//		grid[kingRow][kingCol] = 0;
+//		if (blackToMove) {
+//			inCheck = false;
+//			if (kingRow < 7) {
+//				if (grid[kingRow + 1][kingCol] > 20 || grid[kingRow + 1][kingCol] == 0) {
+//					pieceValue = grid[kingRow + 1][kingCol];
+//					grid[kingRow + 1][kingCol] = 10;
+//					UltimateCheckingCode();
+//					grid[kingRow + 1][kingCol] = pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow > 0) {
+//				if (grid[kingRow - 1][kingCol] > 20 || grid[kingRow - 1][kingCol] == 0) {
+//					pieceValue = grid[kingRow - 1][kingCol];
+//					grid[kingRow - 1][kingCol] = 10;
+//					UltimateCheckingCode();
+//					grid[kingRow - 1][kingCol] = pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow < 7 && kingCol < 7) {
+//				if (grid[kingRow + 1][kingCol + 1] > 20 || grid[kingRow + 1][kingCol + 1] == 0) {
+//					pieceValue = grid[kingRow + 1][kingCol + 1];
+//					grid[kingRow + 1][kingCol + 1] = 10;
+//					UltimateCheckingCode();
+//					grid[kingRow + 1][kingCol + 1] = pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow < 7 && kingCol > 0) {
+//				if (grid[kingRow+1][kingCol - 1] > 20 || grid[kingRow+1][kingCol - 1] == 0) {
+//					pieceValue = grid[kingRow+1][kingCol-1];
+//					grid[kingRow+1][kingCol - 1]=10;
+//					UltimateCheckingCode();
+//					grid[kingRow+1][kingCol - 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingCol < 7) {
+//				if (grid[kingRow][kingCol + 1] > 20 || grid[kingRow][kingCol+1] == 0) {
+//					pieceValue = grid[kingRow][kingCol+1];
+//					grid[kingRow][kingCol + 1]=10;
+//					UltimateCheckingCode();
+//					grid[kingRow][kingCol + 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingCol > 0) {
+//				if (grid[kingRow][kingCol - 1] > 20 || grid[kingRow][kingCol-1] == 0) {
+//					pieceValue = grid[kingRow][kingCol-1];
+//					grid[kingRow][kingCol - 1]=10;
+//					UltimateCheckingCode();
+//					grid[kingRow][kingCol - 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow > 0 && kingCol < 7) {
+//				if (grid[kingRow-1][kingCol + 1] > 20 || grid[kingRow-1][kingCol + 1] == 0) {
+//					pieceValue = grid[kingRow-1][kingCol+1];
+//					grid[kingRow-1][kingCol + 1]=10;
+//					UltimateCheckingCode();
+//					grid[kingRow-1][kingCol + 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow > 0 && kingCol > 0) {
+//				if (grid[kingRow-1][kingCol - 1] > 20 || grid[kingRow-1][kingCol] == 0) {
+//					pieceValue = grid[kingRow-1][kingCol-1];
+//					grid[kingRow-1][kingCol - 1]=10;
+//					UltimateCheckingCode();
+//					grid[kingRow-1][kingCol - 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 10;
+//						return;
+//					}
+//				}
+//			}
+//		} else {
+//			inCheck = false;
+//			if (kingRow < 7) {
+//				if (grid[kingRow + 1][kingCol] < 20  || grid[kingRow + 1][kingCol] == 0) {
+//					pieceValue = grid[kingRow + 1][kingCol];
+//					grid[kingRow + 1][kingCol] = 20;
+//					UltimateCheckingCode();
+//					grid[kingRow + 1][kingCol] = pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow > 0) {
+//				if (grid[kingRow - 1][kingCol] < 20  || grid[kingRow - 1][kingCol] == 0) {
+//					pieceValue = grid[kingRow - 1][kingCol];
+//					grid[kingRow - 1][kingCol] = 20;
+//					UltimateCheckingCode();
+//					grid[kingRow - 1][kingCol] = pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow < 7 && kingCol < 7) {
+//				if (grid[kingRow + 1][kingCol + 1] < 20  || grid[kingRow + 1][kingCol + 1] == 0) {
+//					pieceValue = grid[kingRow + 1][kingCol + 1];
+//					grid[kingRow + 1][kingCol + 1] = 20;
+//					UltimateCheckingCode();
+//					grid[kingRow + 1][kingCol + 1] = pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow < 7 && kingCol > 0) {
+//				if (grid[kingRow+1][kingCol - 1] < 20  || grid[kingRow+1][kingCol - 1] == 0) {
+//					pieceValue = grid[kingRow+1][kingCol-1];
+//					grid[kingRow+1][kingCol - 1]=20;
+//					UltimateCheckingCode();
+//					grid[kingRow+1][kingCol - 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingCol < 7) {
+//				if (grid[kingRow][kingCol + 1] < 20  || grid[kingRow][kingCol+1] == 0) {
+//					pieceValue = grid[kingRow][kingCol+1];
+//					grid[kingRow][kingCol + 1]=20;
+//					UltimateCheckingCode();
+//					grid[kingRow][kingCol + 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingCol > 0) {
+//				if (grid[kingRow][kingCol - 1] < 20  || grid[kingRow][kingCol-1] == 0) {
+//					pieceValue = grid[kingRow][kingCol-1];
+//					grid[kingRow][kingCol - 1]=20;
+//					UltimateCheckingCode();
+//					grid[kingRow][kingCol - 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow > 0 && kingCol < 7) {
+//				if (grid[kingRow-1][kingCol + 1] < 20  || grid[kingRow-1][kingCol + 1] == 0) {
+//					pieceValue = grid[kingRow-1][kingCol+1];
+//					grid[kingRow-1][kingCol + 1]=20;
+//					UltimateCheckingCode();
+//					grid[kingRow-1][kingCol + 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//			inCheck = false;
+//			if (kingRow > 0 && kingCol > 0) {
+//				if (grid[kingRow-1][kingCol - 1] < 20  || grid[kingRow-1][kingCol] == 0) {
+//					pieceValue = grid[kingRow-1][kingCol-1];
+//					grid[kingRow-1][kingCol - 1]=20;
+//					UltimateCheckingCode();
+//					grid[kingRow-1][kingCol - 1]=pieceValue;
+//					if (!inCheck) {
+//						inCheck = true;
+//						grid[kingRow][kingCol] = 20;
+//						return;
+//					}
+//				}
+//			}
+//		}
+//		checkmate = true;
+//		System.out.println("Checkmate is " + checkmate + "!");
+//	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -1115,9 +1118,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					Pawn(col, row, selectedSquare);
 				}
 				pieceBlocking = false;
-				if (inCheck) {
-					Checkmate(row, col);
-				}
 			}
 			// when you first select a piece.
 		} else {
